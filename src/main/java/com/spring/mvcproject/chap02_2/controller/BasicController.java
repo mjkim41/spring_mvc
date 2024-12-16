@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller // 니가 알아서 객체 생성 등 관리해
+// 자세한 설명운 chap02_3 controller의 ProductController참고
+@Controller
 public class BasicController {
 
     // 클라이어느가 get 요청 했을 때
-    // 엤날 방식
-//    @RequestMapping(value = "/chap2-2/hello", method = RequestMethod.GET
+    // 옛날 방식
+    // @RequestMapping(value = "/chap2-2/hello", method = RequestMethod.GET
     @GetMapping("/chap2-2/hello")
     @ResponseBody // 데이터를 클라이언트에 응답
     public String hello() {

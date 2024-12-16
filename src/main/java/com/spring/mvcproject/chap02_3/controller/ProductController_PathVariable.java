@@ -25,30 +25,38 @@ import java.util.Map;
 //      -> 이에 따라 @Controller가 붙은 클래스가 자동으로 스캔되고,
 //         WebApplicationContext(Spring에서 bean을 관리하고 초기화하는 인터페이스)에 등록 되어 자동으로 생성됨
 @Controller
-public class ProductController {
+public class ProductController_PathVariable {
 
-     // 가상의 메모리 상품 저장소
+    // 기본 세팅 : 가상의 메모리 상품 저장소
     private Map<Long, Product> productStore = new HashMap<>();
 
-    public ProductController() {
+    // 기본 세팅
+    public ProductController_PathVariable() {
         productStore.put(1L, new Product(1L, "에어컨", 10000));
         productStore.put(2L, new Product(2L, "세탁기", 10500));
         productStore.put(3L, new Product(3L, "에어프라이어", 26000));
     }
 
-   //옛날 방식
-    // DispatcherServlet아, url/products를 get 요청하면 이 메소드를 호출해줘
-    @GetMapping("/products")
-    // 근데 호출할 때, 클라이언트가 http 요청 주면 httpServletRequest가 생성되잖아
-    // 걔도 그 메소드에서 필요하니까 좀 같이 보내줘
-    public String getProduct(HttpServletRequest req) {
-         //  HttpServletRequest인 req 객체에 스트킹 쿼리 값 요청
-        String id = req.getParameter("id");
-        String price = req.getParameter("price");
-        System.out.println("/products?id=%s : GET 요청이 들어옴".formatted(id));
+    // 1. @GetMapping("/경로(path)/{경로변수}) : ()안에 있는 path에 대한 요청이 오면 이 메서드를 호출해 주세요.
+    @GetMapping("/products/{id}")
+    // @ResponseBody : 메서드가 반환하는 값을 뷰(view)로 전달하지 말고, http 응답으로 바로 전달해주세요.
+    //                  -> 개발자도구에서 network의 response에 보이고, 화면에도 렌더링 됨
+    //                 @ResponseBody를 쓰지 않으면, Spring에서는 WebApp에서 retur에 있는 파일을 찾으러 감
+    @ResponseBody
+    public Product getProduct(
+            /*
+               @PathVariable("id") Long id
+                 - 아래 코드와 동일한 효력(HttpRequestServlet을 생성자로 전달해 준 후, HttpRequestServlet에서 parameter값을 가져오는 것)
+
+                 -   public getProduct(HttpRequestServlet req) {
+                        String productId = extractPathVariable(request, "id");
+                      }
+             */
+            @PathVariable("id") Long id // 변수명과 변수경로가 같을 경우 생략 가능(@PathVariable Long id)
+    ) {
         System.out.println("id = " + id);
-        System.out.println("price = " + price);
-        return "ㅇ";
+        Product product = productStore.get(id);
+        return product;
     }
 
 
