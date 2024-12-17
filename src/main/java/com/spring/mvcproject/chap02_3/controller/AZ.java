@@ -1,11 +1,9 @@
 package com.spring.mvcproject.chap02_3.controller;
 
-import com.spring.mvcproject.chap02_3.entitity.Product;
-import jakarta.servlet.http.HttpServletRequest;
+import com.spring.mvcproject.chap02_3.entity.Product;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;

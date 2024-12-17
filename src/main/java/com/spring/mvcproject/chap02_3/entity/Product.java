@@ -1,4 +1,4 @@
-package com.spring.mvcproject.chap02_3.entitity;
+package com.spring.mvcproject.chap02_3.entity;
 
 import lombok.*;
 
