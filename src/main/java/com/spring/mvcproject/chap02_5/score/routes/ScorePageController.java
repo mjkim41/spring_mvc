@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ScorePageController {
 
-
-
+    // 사용자가 아래 path를 입력하면,
     @GetMapping("/score/page")
+    // score/score-page.jsp 파일을 화면에 보여줘.
     public String scorePage() {
         return "score/score-page";
     }

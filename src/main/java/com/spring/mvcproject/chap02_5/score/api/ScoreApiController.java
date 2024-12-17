@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// scores는 가져오기만 하는 컨트롤러
 @RestController
 @RequestMapping("/api/v1/scores")
 public class ScoreApiController {

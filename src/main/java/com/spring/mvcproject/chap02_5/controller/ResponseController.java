@@ -67,6 +67,7 @@ public class ResponseController {
         return new Cat("야옹양옹", 5, true);
     }
 
+
     // JSON 객체 배열
     @GetMapping("/json/my-cats")
     @ResponseBody
