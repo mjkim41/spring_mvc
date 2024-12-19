@@ -48,15 +48,39 @@ public class ScoreApiController {
                 ;
     }
 
+
+
+
+
+
+
+
+
+
     // 성적 정보 생성 요청 처리
     @PostMapping
     public ResponseEntity<?> createScore(
-            // 클라이언트가 성적정보를 JSON으로 보냈다
+            // @Valid로 인해 객체 생성 시 유효성 검사가 실행되고
             @RequestBody @Valid ScoreCreateDto dto
-            // 입력값 검증 결과를 가진 객체
+            // 우효성 검사 결과는 BindingResult 객체에 저장된다.
             , BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) { // 입력값 검증에서 에러가 발생했다면
+            // getFieldErrors()로 에러 상새내역 리스트를 받고,
+            // 그 리스트에서 에러 필드랑, 에러 defaultMessage을 추출해서 프론트에 맵으로 전달할게요.
+            /* fieldErrors의 형태 :
+               [
+                   { bindingFailure: false
+                     defaultMessage: "어떠어떤게 잘못됐어요."
+                     field: "number" // 객체의 필드
+                   }
+                 , { bindingFailure: false
+                     defaultMessage: "어떠어떤게 잘못됐어요."
+                     field: "number" // 객체의 필드
+                    }
+                ]
+             */
+
             Map<String, String> errorMap = new HashMap<>();
             bindingResult.getFieldErrors().forEach(err -> {
                 errorMap.put(err.getField(), err.getDefaultMessage());

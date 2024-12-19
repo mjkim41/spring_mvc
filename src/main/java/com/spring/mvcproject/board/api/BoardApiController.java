@@ -25,6 +25,7 @@ public class BoardApiController {
     private long nextId = 1;
 
     public BoardApiController() {
+
         Board b1 = Board.of(nextId++, "꿀잼게시물", "개노잼이야 사실");
         Board b2 = Board.of(nextId++, "앙영하긔", "긔긔요미미미ㅣ");
         Board b3 = Board.of(nextId++, "이마트 갈때...", "홈플러스 쿠폰써도 되나요");

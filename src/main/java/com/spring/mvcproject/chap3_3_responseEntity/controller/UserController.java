@@ -1,6 +1,6 @@
-package com.spring.mvcproject.chap3_3.controller;
+package com.spring.mvcproject.chap3_3_responseEntity.controller;
 
-import com.spring.mvcproject.chap3_3.entity.User;
+import com.spring.mvcproject.chap3_3_responseEntity.entity.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

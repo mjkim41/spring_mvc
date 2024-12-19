@@ -1,4 +1,4 @@
-package com.spring.mvcproject.chap3_3.entity;
+package com.spring.mvcproject.chap3_3_responseEntity.entity;
 
 import lombok.*;
 
