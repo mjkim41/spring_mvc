@@ -30,11 +30,14 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	// jsp 관련
+	// jsp 관련 : 타임리프랑 같이 쓰기 불편해서 주석 처리함
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:2.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
-
+    // 타임리프 관련
+//	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	// 입력값 검증
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {

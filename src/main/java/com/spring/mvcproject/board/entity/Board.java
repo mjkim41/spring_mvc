@@ -1,6 +1,6 @@
 package com.spring.mvcproject.board.entity;
 
-import com.spring.mvcproject.chap02_5.score.entity.Score;
+import com.spring.mvcproject.board.dto.request.BoardSaveDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -30,4 +30,8 @@ public class Board {
         return b;
     }
 
+    public Board(BoardSaveDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+    }
 }

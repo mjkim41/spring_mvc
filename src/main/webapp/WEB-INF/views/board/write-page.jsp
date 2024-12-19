@@ -164,13 +164,16 @@
 
         <div id="wrap" class="form-container">
             <h1>꾸러기 게시판 글쓰기</h1>
+            <!-- ! novalidate = 기본 검증 막기기 -->
             <form id="board-form" novalidate>
                 <label for="title">작성자</label>
                 <input type="text" id="writer" name="writer" value="익명" readonly>
                 <label for="title">제목</label>
                 <input type="text" id="title" name="title" required>
+                <p id="title">테스트1</p>
                 <label for="content">내용</label>
                 <textarea id="content" name="content" maxlength="200" required></textarea>
+                <p id="content">테스트2</p>
                 <div class="buttons">
                     <button class="list-btn" type="button"
                         onclick="window.location.href='/board/list'">목록</button>
@@ -210,9 +213,9 @@
 
         <!-- custom script -->
          <script>
-          const $form = document.getElementById('board-form');
           // form  안에 input type=submit 나 button type=submit가 있을 경우,
           // 버튼을 클릭하면 form submit 이벤트가 터짐
+          $form = document.getElementById('board-form');
           $form.addEventListener('submit', e => {
             // 폼 데이터를 서버로 전달하고 페이지를 새로고침 하는 기능을 막음
             e.preventDefault();
@@ -224,29 +227,32 @@
             const formData = new FormData($form);
             const formDataEntires = formData.entries();
             const boardObj = Object.fromEntries(formDataEntires);
-            console.log(boardObj);
-  
             // 새로 등록된 글 내용을 객체로 전달해주면, 이 내용을 boardList에 등록해주는 함수
             fetchPostBoard(boardObj);
           });
 
+
           // ============= api 관련 함수 =============== //
           // ## 새로 등록된 글 내용을 객체로 전달해주면, 이 내용을 boardList에 등록해주는 함수 ## //
-          async function fetchPostBoard(boardObj) { // data : addEventListner에서 글쓰기 버튼 누르면 객체 형태로 전달해 줌
-            console.log(boardObj);
+          async function fetchPostBoard(payload) { // data : addEventListner에서 글쓰기 버튼 누르면 객체 형태로 전달해 줌
             // 서버로 POST 요청 보내기
             const response = await fetch("/api/v1/boards", {
                 method: 'POST',
                 headers: { 'Content-Type' : 'application/json'},
-                body: JSON.stringify(boardObj)
+                body: JSON.stringify(payload)
             })
-            const data = await response.json();
+   
             if (response.status === 200) {
                // 성공 시 window.location.href = '/board/list';
-               console.log(data);
                window.location.href = '/board/list';
-            } else {
-                alert('에러 발생');
+            } else if (response.status === 400) {
+                // 서버 에러 메시지 파싱
+                const errorJson = await response.json();
+                // 에러 메시지를 html 에 표기 
+                // ! 객체 키로 순환 : key in object
+                for (const key in errorJson) {
+                  document.querySelector('p#'+key).textContent = errorJson[key];
+                }
             }
 
           }

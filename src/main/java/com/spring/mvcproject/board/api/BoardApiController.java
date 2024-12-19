@@ -1,6 +1,12 @@
 package com.spring.mvcproject.board.api;
 
+import com.spring.mvcproject.board.dto.request.BoardSaveDto;
 import com.spring.mvcproject.board.entity.Board;
+import com.spring.mvcproject.score.entity.Score;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -47,4 +53,34 @@ public class BoardApiController {
     }
 
     // 게시물 등록 POST
+    @PostMapping
+    public ResponseEntity<?> createBoard(
+            @RequestBody @Valid BoardSaveDto dto
+            // 입력값 결과 검증 결과를 가진 객체. spring에서 자동 생성됨
+            , BindingResult bindingResult
+    ) {
+        // 입력값 검증에서 에러가 발생했다면
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(err -> {
+                errorMap.put(err.getField(), err.getDefaultMessage());
+            });
+            return ResponseEntity
+                    .badRequest()
+                    .body(errorMap);
+        }
+        // dto를 Board 객체로 변환 후 boardStore 해쉬맵에 추가
+        Board board = new Board(dto);
+        board.setRegDateTime(LocalDateTime.now());
+        board.setId(nextId++);
+        board.setViewCount(0);
+        boardStore.put(board.getId(), board);
+
+        // 클라이언트에 응답 전달
+        return ResponseEntity
+                .ok()
+                .body("게시글 등록 완료" + board);
+    }
+
+
 }
