@@ -35,13 +35,6 @@ public class Board {
         this.content = dto.getContent();
     }
 
-    public static Board from(BoardSaveDto dto) {
-        Board board = new Board();
-        board.setTitle(dto.getTitle());
-        board.setContent(dto.getContent());
-        return board;
-    }
-
 
 
 }

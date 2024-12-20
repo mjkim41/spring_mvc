@@ -1,12 +1,12 @@
 package com.spring.mvcproject.score.api;
 
 import com.spring.mvcproject.score.dto.request.ScoreCreateDto;
+import com.spring.mvcproject.score.dto.response.ScoreDetailDto;
 import com.spring.mvcproject.score.entity.Score;
+import com.spring.mvcproject.score.response.ScoreListDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -32,25 +32,103 @@ public class ScoreApiController {
         scoreStore.put(s4.getId(), s4);
     }
 
+
+
+
     // 전체 성적정보 조회 (정렬 파라미터를 읽어야 함)
     // /api/v1/scores?sort=name
     @GetMapping
-    public List<Score> scoreList(
+    public ResponseEntity<List<ScoreListDto>> scoreList(
             @RequestParam(required = false, defaultValue = "id") String sort
     ) {
+//        // 1. DB에서 성적 정보를 모두 꺼내와서 리스트로 만듬
+//         ArrayList<Score> originalScores = new ArrayList<>(scoreStore.values());
+//        // 2. DB를 DTO로 만들어서 DTO 리스트에 추가
+//        List<ScoreListDto> responseList = new ArrayList<>();
+//        for (Score score : originalScores) {
+//            ScoreListDto dto = new ScoreListDto(score);
+//            responseList.add(dto);
+//        }
 
-        System.out.println("정렬기준: " + sort);
 
-        return new ArrayList<>(scoreStore.values())
+        List<ScoreListDto> responseList = new ArrayList<>(scoreStore.values())
                 .stream()
-                .sorted(getScoreComparator(sort))
-                .collect(Collectors.toList())
-                ;
+                .map(score -> new ScoreListDto(score))
+                .collect(Collectors.toList());
+
+        // 석차 구하기
+        calculateRank(responseList);
+
+
+        return ResponseEntity
+                .ok()
+                .body(responseList);
+    }
+
+    private void calculateRank(List<ScoreListDto> responseList) {
+       // 석차 구하기
+        // 총점 내림차로 정렬
+        responseList.sort(Comparator.comparing(ScoreListDto::getAverage).reversed());
+
+        int currentRank = 1;
+        for (ScoreListDto dto : responseList) {
+            dto.setRank(currentRank++);
+        }
+    }
+
+
+    // 성적 상세조회 요청
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findOne(@PathVariable Long id) {
+        // 데이터베이스(Map)에서 단일 조회 수행
+        Score targetStudent = scoreStore.get(id);
+        if (targetStudent == null) {
+            return ResponseEntity
+                    .status(404)
+                    .body("해당 정보를 찾을 수 없습니다: id - " + id);
+        }
+
+        // 석차와 총 학생수를 구하기 위해 학생 목록을 가져옴
+        List<Score> scoreList = new ArrayList<>(scoreStore.values());
+
+        scoreList.sort(Comparator.comparing((Score s) -> s.getKor() + s.getEng() + s.getMath()).reversed());
+
+        int rank = 1;
+        for (Score s : scoreList) { // 전체 학생을 순회하면서
+            if (s.getId().equals(targetStudent.getId())) { // 현재 발견된 학생을 찾으면 스톱
+                break;
+            }
+            rank++;
+        }
+
+        // Score엔터티를 ScoreDetailDto로 변환
+        ScoreDetailDto responseDto = new ScoreDetailDto(targetStudent, scoreList.size());
+        responseDto.setRank(rank);
+
+        return ResponseEntity
+                .ok()
+                .body(responseDto);
     }
 
 
 
 
+
+    // 정렬 처리를 위한 정렬기 생성 유틸 메서드
+    private Comparator<ScoreListDto> getScoreComparator(String sort) {
+        Comparator<ScoreListDto> comparing = null;
+        switch (sort) {
+            case "id":
+                comparing = Comparator.comparing(ScoreListDto::getId);
+                break;
+            case "name":
+                comparing = Comparator.comparing(ScoreListDto::getMaskingName);
+                break;
+            case "average":
+                comparing = Comparator.comparing(ScoreListDto::getAverage).reversed();
+        }
+        return comparing;
+    }
 
 
 
@@ -113,20 +191,5 @@ public class ScoreApiController {
 
 
 
-
-
-    // 정렬 처리를 위한 정렬기 생성 유틸 메서드
-    private Comparator<Score> getScoreComparator(String sort) {
-        Comparator<Score> comparing = null;
-        switch (sort) {
-            case "id":
-                comparing = Comparator.comparing(Score::getId);
-                break;
-            case "name":
-                comparing = Comparator.comparing(Score::getName);
-                break;
-        }
-        return comparing;
-    }
 
 }
