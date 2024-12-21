@@ -26,8 +26,6 @@ public class ScoreListDto {
         this.total = score.getEng() + score.getKor() + score.getMath();
         this.average = Math.round((total / 3.0) * 100) / 100.0;
         this.maskingName = makeMaskingName(score.getName());
-
-
     }
 
     /**

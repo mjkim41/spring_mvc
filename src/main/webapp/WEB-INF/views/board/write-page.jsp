@@ -182,7 +182,7 @@
             fetchPostBoard(boardObj);
           });
 
-
+          querySelector('label[v]')
           // =========== 일반 함수 ===============//
           // ## post 시 에러 메시지 생성 //
           function createErrorMessage(errorObj) {
@@ -195,8 +195,8 @@
               if (key === 'content') {
                 const $errorSpan = document.createElement('span');
                 $errorSpan.classList.add('error');
-                $errorSpan.textContent = errorObj[key];
-                document.querySelector('label[for=content]').after($errorSpan);
+                $errorSpan.textContent = errorObj[key]; // 객체의 value 접근 : Object[key]
+                document.querySelector('label[for=content]').after($errorSpan); // ! 특정 요소 뒤에 html 요소 생성
               }
               document.getElementById(key).textContent = errorObj[key];
               

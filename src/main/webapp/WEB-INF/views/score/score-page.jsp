@@ -95,7 +95,7 @@
 
             <form id="score-form">
                 <label>
-                    # 이름: <input type="text" name="name">
+                    # 이름: <input type="text" name="name"> 
                     <p class="error" id="studentName"></p>
                 </label>
                 <label>
@@ -152,7 +152,6 @@
 
             // 총 학생 수 렌더링
             document.getElementById('count').textContent = data.length;
-
 
             data.forEach(({id, maskingName, sum, avg, rank}) => {
                 $scores.innerHTML += `

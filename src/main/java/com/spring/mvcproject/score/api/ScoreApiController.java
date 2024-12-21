@@ -5,6 +5,7 @@ import com.spring.mvcproject.score.dto.response.ScoreDetailDto;
 import com.spring.mvcproject.score.entity.Score;
 import com.spring.mvcproject.score.response.ScoreListDto;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -32,38 +33,41 @@ public class ScoreApiController {
         scoreStore.put(s4.getId(), s4);
     }
 
-
-
-
     // 전체 성적정보 조회 (정렬 파라미터를 읽어야 함)
     // /api/v1/scores?sort=name
     @GetMapping
     public ResponseEntity<List<ScoreListDto>> scoreList(
             @RequestParam(required = false, defaultValue = "id") String sort
     ) {
-//        // 1. DB에서 성적 정보를 모두 꺼내와서 리스트로 만듬
+//        // 1. DB에서 성적 정보를 모두 꺼내와서 values 만으로 리스트로 만듬
 //         ArrayList<Score> originalScores = new ArrayList<>(scoreStore.values());
-//        // 2. DB를 DTO로 만들어서 DTO 리스트에 추가
 //        List<ScoreListDto> responseList = new ArrayList<>();
-//        for (Score score : originalScores) {
+//        // 2.ArrayList<Score>에서 반복문으로 각 Score를 꺼내서
+//        for (Score score : originalScores)
+//             // Score 객체로 ScoreListDto 객체를 만들어서
 //            ScoreListDto dto = new ScoreListDto(score);
+//            // 리스트에 저장
 //            responseList.add(dto);
 //        }
 
-
-        List<ScoreListDto> responseList = new ArrayList<>(scoreStore.values())
+        /* 구현하고자 하는 원리 : 원본 데이터인 HashMap<id, Score> ScoreList를 가져와서,
+                              ScoreList에서 반복문으로 각 Score 객체에 접근한 후
+                              Score 객체를 ScoreListDto 객체르 변환하여서 ScoreListDto List를 만들고
+                              SCORElISTdTO lIST를 클라이언트에 전달해준다.
+         */
+        List<ScoreListDto> responseList = new ArrayList<>(scoreStore.values()) // hashmap에서 score 객체를 꺼낸 후에
                 .stream()
-                .map(score -> new ScoreListDto(score))
-                .collect(Collectors.toList());
+                .map(score -> new ScoreListDto(score))// 각 객체를ScoreListDto로 변환해서 저장한 후에
+                .collect(Collectors.toList()); // 리스트로 만든다.
 
         // 석차 구하기
         calculateRank(responseList);
-
 
         return ResponseEntity
                 .ok()
                 .body(responseList);
     }
+
 
     private void calculateRank(List<ScoreListDto> responseList) {
        // 석차 구하기
@@ -134,7 +138,6 @@ public class ScoreApiController {
 
 
 
-
     // 성적 정보 생성 요청 처리
     @PostMapping
     public ResponseEntity<?> createScore(
@@ -168,6 +171,7 @@ public class ScoreApiController {
                     .body(errorMap)
                     ;
         }
+
 
         // ScoreCreateDto를 Score로 변환하는 작업
         Score score = new Score(dto);
