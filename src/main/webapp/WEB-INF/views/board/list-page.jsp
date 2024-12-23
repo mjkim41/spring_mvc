@@ -301,10 +301,9 @@ uri="http://java.sun.com/jsp/jstl/core" %>
       // card-wrapper는 동적으로 생성되는 태그라서 이벤트가 걸어지지 않으므로
       // 초기부터 세팅되어 있는 card-wrapper의 부모 태그에 이벤트를 걸어줌
       $cardContainer.addEventListener('click', e => {
-        if(e.target.matches('.card-container')) return;
+        if (!e.target.matches('.card *')) return; // section.card의 후손이 아니면 나가라
         // 클릭한 id 가져오기
         const bno = e.target.closest('section.card').dataset.bno;
-        // console.log(id);
         window.location.href = `detail/\${bno}`; 
       });
     </script>

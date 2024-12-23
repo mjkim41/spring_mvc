@@ -17,18 +17,28 @@ public class ScoreCreateDto {
     @Pattern(regexp = "^[가-힣]+$", message = "이름은 한글로만 작성하세요!")
     private String studentName;
 
-    @Min(value = 0, message = "국어 점수는 0점 이상어야합니다.")
+    @Min(value = 0, message = "국어 점수는 0점 이상이어야합니다.")
     @Max(value = 100, message = "국어 점수는 100점 이하여야합니다.")
     @NotNull(message = "국어점수는 필수값입니다.")
     private Integer korean;
 
-    @Min(value = 0, message = "영어 점수는 0점 이상어야합니다.")
+    @Min(value = 0, message = "영어 점수는 0점 이상이어야합니다.")
     @Max(value = 100, message = "영어 점수는 100점 이하여야합니다.")
     @NotNull(message = "영어점수는 필수값입니다.")
     private Integer english;
 
-    @Min(value = 0, message = "수학 점수는 0점 이상어야합니다.")
+    @Min(value = 0, message = "수학 점수는 0점 이상이어야합니다.")
     @Max(value = 100, message = "수학 점수는 100점 이하여야합니다.")
     @NotNull(message = "수학점수는 필수값입니다.")
     private Integer math;
+
+
+    public Score toEntity() {
+        Score s = new Score();
+        s.setName(this.studentName);
+        s.setKor(this.korean);
+        s.setEng(this.english);
+        s.setMath(this.math);
+        return s;
+    }
 }

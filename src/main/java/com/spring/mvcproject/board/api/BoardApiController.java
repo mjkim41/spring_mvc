@@ -1,22 +1,16 @@
 package com.spring.mvcproject.board.api;
 
 import com.spring.mvcproject.board.dto.request.BoardSaveDto;
-import com.spring.mvcproject.board.dto.response.BoardDetailDto;
+import com.spring.mvcproject.board.dto.response.BoardDetailResponse;
 import com.spring.mvcproject.board.dto.response.BoardListDto;
 import com.spring.mvcproject.board.entity.Board;
-import com.spring.mvcproject.score.dto.response.ScoreDetailDto;
-import com.spring.mvcproject.score.entity.Score;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 
 @RestController
@@ -89,25 +83,25 @@ public class BoardApiController {
 
     // ## 게시물 상세조회 ##
     @GetMapping("/{id}")// "/api/v1/boards/{id}"
-    public ResponseEntity<?> findBoard(
+    public ResponseEntity<?> detail(
             @PathVariable Long id
     ) {
-        // 데이터베이스(Map)에서 해당 아이디를 가진 board 객체 가져오기
-        Board targetBoard = boardStore.get(id);
+        // 데이터베이스(Map)에서 해당 아이디를 가진 board 객체 찾아오기
+        Board foundBoard = boardStore.get(id);
 
-        // 해당 id가 없는 경우, 없는 id 라고 메시지 보내기
-        if(targetBoard == null) {
+        // 예외처리 : 해당 id를 가진 board 객체가 없는 경우, 없는 id 라고 메시지 보내기
+        if(foundBoard == null) {
             return ResponseEntity
-                    .status(404)
+                    .badRequest()
                     .body("없는 아이디입니다: id - " + id);
         }
 
-        // 있는 아이디인 경우, BoardDetailDto로 변환해주기
-        BoardDetailDto boardDetailDto = new BoardDetailDto(targetBoard);
-        System.out.println(boardDetailDto);
+        // 있는 아이디인 경우,
+        // 게시물 원본 데이터를 클라이언트 스펙에 맞게 BoardDetailResponse 객체로 변환
+        BoardDetailResponse boardDetailResponse = BoardDetailResponse.from(foundBoard);
         return ResponseEntity
                 .ok()
-                .body(boardDetailDto);
+                .body(boardDetailResponse);
 
 
 

@@ -159,7 +159,7 @@
        //   *************************** 상세 보기 관련 **********************
 
        // === 일반 함수 ===
-       // ## 1. fetchDetail 함수에서 DB 정보 가져와서 화면에 렌더링 하는 함수
+       // ## (상세 보기 관련) fetchDetail 함수에서 DB 정보 가져와서 화면에 렌더링 하는 함수
        function renderBoardDetail({id, title, content, date}) { // data : fetchDetail() 함수에서 전달해줌
         const $id = document.getElementById('id');
         $id.textContent = id;
@@ -172,10 +172,8 @@
         $date.textContent = date;
        }
 
-
-
       // ===  API 통신 관련 ===
-      //  ## 1. 게시물 상세정보를 가져오는 함수  
+      //  ## (상세보기 관련) 서버에 게시물 상세조회 API 요청하는 함수  
       async function fetchDetail() {
         // backend에서 게시물 상세정보 가져오기
         //  - id 정보는 pageController에서 Model 객체를 통해 전달받음
@@ -187,11 +185,12 @@
         renderBoardDetail(data);
       }
 
+      // *************************** 상세 보기 끝 *************************
+
  
 
  
-      
-
+    
       // ******************* 화면 진입 시 실행 *******************
       fetchDetail();
 

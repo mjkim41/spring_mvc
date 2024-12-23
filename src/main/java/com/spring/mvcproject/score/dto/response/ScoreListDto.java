@@ -1,4 +1,4 @@
-package com.spring.mvcproject.score.response;
+package com.spring.mvcproject.score.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spring.mvcproject.score.entity.Score;

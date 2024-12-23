@@ -1,5 +1,6 @@
 package com.spring.mvcproject.board.routes;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
