@@ -1,6 +1,7 @@
 package com.spring.mvcproject.database.jdbc.repository;
 
 import com.spring.mvcproject.database.jdbc.entity.Person;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -14,7 +15,7 @@ public class PersonRepository {
     // Database에 로그인할 정보
     private String username = "root";
     private String password = "joder9141";
-    // 데이터베이스가 설치된 주소 (JDBC URL)
+    // url 형식 : 통신종류 + url(maria db는 기본포트 3306) + DB TABLE
     private String url = "jdbc:mariadb://localhost:3306/practice";
 
     // 전용 드라이버 클래스
@@ -29,6 +30,7 @@ public class PersonRepository {
             System.out.println("DB 연결 실패!");
         }
     }
+
 
     // INSERT
     public void save(Person person) {
@@ -91,6 +93,7 @@ public class PersonRepository {
         }
     }
 
+
     // DELETE
     public void delete(Long id) {
         String sql = """
@@ -117,6 +120,7 @@ public class PersonRepository {
             e.printStackTrace();
         }
     }
+
 
     // 다중 SELECT - 목록 조회
     public List<Person> findAll() {
@@ -149,7 +153,7 @@ public class PersonRepository {
                 long id = rs.getLong("id");
                 String personName = rs.getString("person_name");
                 int age = rs.getInt("age");
-
+                // 데이터베이트에서 가져온 값을 객체로 변환
                 Person p = new Person(id, personName, age);
                 System.out.println("p = " + p);
 
