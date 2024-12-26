@@ -1,12 +1,32 @@
 package com.spring.mvcproject.database.jdbc.repository;
 
 import com.spring.mvcproject.database.jdbc.entity.Person;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+[Vanilla Code JDBC 작동 원리]
+1. @Repository 클래스에 생성자를 통해 DB 전용 드라이버 로딩
+  - Class.forName("org.mariadb.jdbc.Driver");
+
+2. DriverManager.getConnection(url, username, password)로 DB에 연결한 후
+
+3. Connection.preparedStatement(sql)을 통해 sql 쿼리 세팅
+
+4. PreparedStatement.setLong() 등을 통해 쿼리의 ? 값을 세팅
+
+5. PreparedStatement.update(sql) : 조회 제외
+   PreparedStatement.query(sql) : 조회 -> ResultSet 반환
+
+6. (조회의 경우)
+   while(ResultSet.next()) {
+    Long field1 = ResultSet.getLong(column1)
+    new Product(field1, field2)
+   }
+ */
 
 // 데이터베이스에 접근하는 객체
 @Repository
@@ -15,7 +35,7 @@ public class PersonRepository {
     // Database에 로그인할 정보
     private String username = "root";
     private String password = "joder9141";
-    // url 형식 : 통신종류 + url(maria db는 기본포트 3306) + DB TABLE
+    // 데이터베이스가 설치된 주소 (JDBC URL)
     private String url = "jdbc:mariadb://localhost:3306/practice";
 
     // 전용 드라이버 클래스
@@ -31,7 +51,6 @@ public class PersonRepository {
         }
     }
 
-
     // INSERT
     public void save(Person person) {
         String sql = """
@@ -41,9 +60,10 @@ public class PersonRepository {
                         (?, ?, ?)
                 """;
 
+        Connection conn =  null;
         try {
             // 1. DB에 접속하고 접속 정보를 받아옴
-            Connection conn = DriverManager.getConnection(url, username, password);
+            conn = DriverManager.getConnection(url, username, password);
 
             // 2. SQL을 실행할 수 있는 실행기 객체를 가져옴
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -60,6 +80,13 @@ public class PersonRepository {
 
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            // 메모리 정리 : 연결 해제
+            try {
+                if(conn != null) conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -71,9 +98,8 @@ public class PersonRepository {
                     WHERE id = ?
                 """;
 
-        try {
-            // 1. DB에 접속하고 접속 정보를 받아옴
-            Connection conn = DriverManager.getConnection(url, username, password);
+        // try ~ with resources
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
 
             // 2. SQL을 실행할 수 있는 실행기 객체를 가져옴
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -92,7 +118,6 @@ public class PersonRepository {
             e.printStackTrace();
         }
     }
-
 
     // DELETE
     public void delete(Long id) {
@@ -121,7 +146,6 @@ public class PersonRepository {
         }
     }
 
-
     // 다중 SELECT - 목록 조회
     public List<Person> findAll() {
         String sql = """
@@ -147,19 +171,19 @@ public class PersonRepository {
             //   -> 표에 접근하여 데이터를 조작할 수 있다.
             ResultSet rs = pstmt.executeQuery();
 
+
             // next(): 포인터를 한 행씩 이동
             while (rs.next()) {
                 // 커서가 가리키는 행의 데이터 추출
                 long id = rs.getLong("id");
                 String personName = rs.getString("person_name");
                 int age = rs.getInt("age");
-                // 데이터베이트에서 가져온 값을 객체로 변환
+
                 Person p = new Person(id, personName, age);
                 System.out.println("p = " + p);
 
                 personList.add(p);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -18,6 +18,7 @@ import static java.util.Comparator.comparing;
 @Service
 public class ScoreService {
 
+    // 서비스는 리포지토리에 의존
     private ScoreRepository scoreRepository;
 
     @Autowired
@@ -27,6 +28,7 @@ public class ScoreService {
 
     // 목록조회 요청 핵심 로직 처리
     public List<ScoreListDto> getList(String sort) {
+
 
         // 원본 성적 리스트를 클라이언트가 원하는 모양으로 DTO변환
         List<ScoreListDto> responseData = scoreRepository.findAll(sort)
@@ -43,7 +45,6 @@ public class ScoreService {
         // 컨트롤러에게 정제된 데이터 반환
         return responseData;
     }
-
 
     // 성적 단일 조회 핵심 비즈로직 처리
     public ScoreDetailDto getDetail(Long id) {

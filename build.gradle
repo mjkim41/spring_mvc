@@ -45,6 +45,9 @@ dependencies {
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
 	// html, css, js 자동 업데이트
 	compileOnly("org.springframework.boot:spring-boot-devtools")
+
+	// my batias
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 }
 
 tasks.named('test') {

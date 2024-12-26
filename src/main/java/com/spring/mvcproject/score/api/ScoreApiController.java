@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController // JSON응답
 @RequestMapping("/api/v1/scores")
@@ -24,7 +26,6 @@ public class ScoreApiController {
     public ScoreApiController(ScoreService scoreService) {
         this.scoreService = scoreService;
     }
-
 
     // 전체 성적정보 조회 (정렬 파라미터를 읽어야 함)
     // /api/v1/scores?sort=name   : GET
@@ -85,7 +86,6 @@ public class ScoreApiController {
                 .body("성적 정보 생성 완료! " + score);
 
     }
-
 
     // 성적 정보 삭제요청 처리
     @DeleteMapping("/{id}")

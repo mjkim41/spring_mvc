@@ -4,109 +4,89 @@ import com.spring.mvcproject.board.dto.request.BoardSaveDto;
 import com.spring.mvcproject.board.dto.response.BoardDetailResponse;
 import com.spring.mvcproject.board.dto.response.BoardListDto;
 import com.spring.mvcproject.board.entity.Board;
+import com.spring.mvcproject.board.repository.BoardRepository;
+import com.spring.mvcproject.board.service.BoardService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static java.util.stream.Collectors.*;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api/v1/boards")
+@RequiredArgsConstructor
 public class BoardApiController {
 
-    private Map<Long, Board> boardStore = new HashMap<>();
-
-    private long nextId = 1;
-
-    public BoardApiController() {
-
-        Board b1 = Board.of(nextId++, "꿀잼게시물", "개노잼이야 사실");
-        Board b2 = Board.of(nextId++, "앙영하긔", "긔긔요미미미ㅣ");
-        Board b3 = Board.of(nextId++, "이마트 갈때...", "홈플러스 쿠폰써도 되나요");
-
-        boardStore.put(b1.getId(), b1);
-        boardStore.put(b2.getId(), b2);
-        boardStore.put(b3.getId(), b3);
-    }
+    private final BoardService boardService;
 
     // 게시물 목록조회 GET
     @GetMapping
-    public List<BoardListDto> boardList() {
-        // 게시물 목록은 최신글이 가장 위에 있어야 함
-        return new ArrayList<>(boardStore.values())
-                .stream()
-                // board을 response DTO로 변환
-                .map(BoardListDto::new)
-                .sorted(Comparator.comparing(BoardListDto::getDate).reversed())
-                .collect(toList())
-                ;
+    public ResponseEntity<?> boardList() {
+        return ResponseEntity.ok().body(boardService.getList());
     }
 
     // 게시물 삭제 DELETE
     @DeleteMapping("/{id}")
-    public String deleteBoard(@PathVariable Long id) {
-        Board removed = boardStore.remove(id);
-        return "게시물 삭제 성공! - " + removed;
+    public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
+        boolean flag = boardService.delete(id);
+        if (!flag) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("해당 id는 존재하지 않습니다: id = " + id);
+        }
+        return ResponseEntity.ok().body("게시물 삭제 성공! ");
     }
 
     // 게시물 등록 POST
     @PostMapping
     public ResponseEntity<?> createBoard(
             @RequestBody @Valid BoardSaveDto dto
-            // 입력값 결과 검증 결과를 가진 객체. spring에서 자동 생성됨
             , BindingResult bindingResult
     ) {
-        // 입력값 검증에서 에러가 발생했다면
+        // 입력값 검증 응답 처리
         if (bindingResult.hasErrors()) {
-            // fieldErrors [ {} ,{}] 각 객체에 들어가서 mashmap에 { {field: defaultMessage}} 저장
             Map<String, String> errorMap = new HashMap<>();
             bindingResult.getFieldErrors().forEach(err -> {
                 errorMap.put(err.getField(), err.getDefaultMessage());
             });
             return ResponseEntity
                     .badRequest()
-                    .body(errorMap);
+                    .body(errorMap)
+                    ;
         }
-        // dto를 Board 객체로 변환 후 boardStore 해쉬맵에 추가
-        Board board = BoardSaveDto.toEntity(dto);
-        board.setId(nextId++);
-        boardStore.put(board.getId(), board);
 
-        // 클라이언트에 응답 전달
-        return ResponseEntity
-                .ok()
-                .body("게시글 등록 완료" + board);
+        boardService.create(dto);
+
+        return ResponseEntity.ok().body("게시물 등록 성공! ");
+
     }
 
-    // ## 게시물 상세조회 ##
-    @GetMapping("/{id}")// "/api/v1/boards/{id}"
-    public ResponseEntity<?> detail(
-            @PathVariable Long id
-    ) {
-        // 데이터베이스(Map)에서 해당 아이디를 가진 board 객체 찾아오기
-        Board foundBoard = boardStore.get(id);
+    // 게시물 상세조회 요청처리
+    @GetMapping("/{id}")
+    public ResponseEntity<?> detail(@PathVariable Long id) {
+        // 특정 게시물 찾아오기
+        BoardDetailResponse foundBoard = boardService.getArticle(id);
 
-        // 예외처리 : 해당 id를 가진 board 객체가 없는 경우, 없는 id 라고 메시지 보내기
-        if(foundBoard == null) {
+        // 게시물이 없을 경우
+        if (foundBoard == null) {
             return ResponseEntity
-                    .badRequest()
-                    .body("없는 아이디입니다: id - " + id);
+                    .badRequest() // 400
+                    .body(id + "번 게시물은 존재하지 않습니다.");
         }
 
-        // 있는 아이디인 경우,
-        // 게시물 원본 데이터를 클라이언트 스펙에 맞게 BoardDetailResponse 객체로 변환
-        BoardDetailResponse boardDetailResponse = BoardDetailResponse.from(foundBoard);
+        // 게시물 원본데이터를 클라이언트 스펙에 맞게 변환
         return ResponseEntity
                 .ok()
-                .body(boardDetailResponse);
-
-
-
+                .body(foundBoard);
     }
-
-
 
 }

@@ -1,6 +1,5 @@
 package com.spring.mvcproject.board.entity;
 
-import com.spring.mvcproject.board.dto.request.BoardSaveDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +18,6 @@ public class Board {
 
     // 정적 팩토리 메서드: 객체를 생성할 때 자동으로 들어가는
     // 필드를 제외하고 객체를 빠르게 생성해주는 메서드
-
     public static Board of(Long id, String title, String content) {
         Board b = new Board();
         b.setId(id);
@@ -29,12 +27,5 @@ public class Board {
         b.setRegDateTime(LocalDateTime.now());
         return b;
     }
-
-    public Board(BoardSaveDto dto) {
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
-    }
-
-
 
 }

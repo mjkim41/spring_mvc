@@ -1,0 +1,60 @@
+
+server:
+  port: 9000
+
+logging:
+  level:
+    root: info
+
+#logging.level.org.springframework.web.servlet.DispatcherServlet=DEBUG
+
+spring:
+  #jsp setting
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+# database setting
+  datasource:
+    url: jdbc:mariadb://localhost:3306/practice
+    username: root
+    password: joder9141
+    driver-class-name: org.mariadb.jdbc.Driver
+
+# MyBatis Setting
+mybatis:
+  # sql file location
+  #  - @Mapper가 붙어 있는 인터페이스의 메소드를 호출하면
+  #  - mapper-locations 폴더에서 resource>적어놓은 경로>적어놓는 확장자의 파일을 찾아서 그 파일에서 해당 메소드와 연결도니 쿼리를 찾아서 실행해라
+  mapper-locations: classpath:mapper/**/*.xml
+  # 반환할 객체의 package 주소
+  type-aliases-package: com.spring.mvcproject.database.mybatis
+    # 니네가 DB column 이름이 aa_bb면 객체 필드명을 aaBb로 하면 내가 알아서 db랑 객체랑 mapping 해줄께
+  configuration:
+    # Java 필드명과 DB 칼럼명 간의 이름 매핑 설정
+    # DB 칼럼명이 aa_bb인 경우, Java 객체의 필드명을 aaBb로 자동 매핑
+    map-underscore-to-camel-case: true
+
+
+# database setting
+Spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/practice
+    username: root
+    password: joder9141
+    driver-class-name: org.mariadb.jdbc.Driver
+
+# MyBatis Setting
+  mybatis:
+    # sql file location
+    #  - @Mapper가 붙어 있는 인터페이스의 메소드를 호출하면
+    #  - mapper-locations 폴더에서 resource>적어놓은 경로>적어놓는 확장자의 파일을 찾아서 그 파일에서 해당 메소드와 연결도니 쿼리를 찾아서 실행해라
+    mapper-locations: classpath:mapper/**/*.xml
+    # 반환할 객체의 package 주소
+    type-aliases-package: com.spring.mvcproject.database.mybatis
+    # 니네가 DB column 이름이 aa_bb면 객체 필드명을 aaBb로 하면 내가 알아서 db랑 객체랑 mapping 해줄께
+    configuration:
+      # Java 필드명과 DB 칼럼명 간의 이름 매핑 설정
+      # DB 칼럼명이 aa_bb인 경우, Java 객체의 필드명을 aaBb로 자동 매핑
+      map-underscore-to-camel-case: true

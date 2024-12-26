@@ -23,10 +23,10 @@ public class ScoreDetailDto {
 
     public ScoreDetailDto(Score s, int totalCount) {
         this.id = s.getId();
+        this.name = s.getName();
         this.kor = s.getKor();
         this.eng = s.getEng();
         this.math = s.getMath();
-        this.name = s.getName();
         this.total = kor + eng + math;
         this.average = Math.round(total / 3.0 * 100) / 100.0;
         this.totalCount = totalCount;

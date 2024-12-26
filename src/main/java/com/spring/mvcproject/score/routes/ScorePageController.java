@@ -1,5 +1,6 @@
 package com.spring.mvcproject.score.routes;
 
+import org.mariadb.jdbc.Driver;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +34,9 @@ public class ScorePageController {
         return mv;
     }
 
+    // 상세조회 페이지 라우팅
     @GetMapping("/score/{id}")
-    public String detailPage(
-            @PathVariable Long id, Model model
-    ) {
+    public String detailPage(@PathVariable Long id, Model model) {
         System.out.println("/score/%s : GET".formatted(id));
         model.addAttribute("id", id);
         return "score/score-detail";
