@@ -2,13 +2,31 @@
 server:
   port: 9000
 
+#logging:
+#  level:
+#    root: info # spring 전체 로그
+#    com.spring.mvcproject: debug
+
 logging:
   level:
-    root: info
+    root: info # spring 전체 로그
+    com.spring.mvcproject: debug
+    org:
+      springframework:
+        web: DEBUG
+
+
 
 #logging.level.org.springframework.web.servlet.DispatcherServlet=DEBUG
 
 spring:
+
+  servlet:
+    multipart:
+      max-file-size: 10MB # 파일 1개 당 최대 용량
+      max-request-size: 100MB # 한 번에 업로드할 수 있는 파일의 총 용량
+
+
   #jsp setting
   mvc:
     view:
@@ -58,3 +76,9 @@ Spring:
       # Java 필드명과 DB 칼럼명 간의 이름 매핑 설정
       # DB 칼럼명이 aa_bb인 경우, Java 객체의 필드명을 aaBb로 자동 매핑
       map-underscore-to-camel-case: true
+
+    # custom setting -file
+    # 사용자가 올린 파일들을 어디에 저장할 것인지 지정
+file:
+  upload:
+    location: ${user.home}/spring/upload/
