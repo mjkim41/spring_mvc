@@ -1,16 +1,14 @@
 package com.spring.mvcproject.database.mybatis.service;
 
+import com.spring.mvcproject.database.mybatis.dto.request.PetSaveRequest;
+import com.spring.mvcproject.database.mybatis.dto.response.PetDetailResponse;
 import com.spring.mvcproject.database.mybatis.repository.PetRepository;
 import com.spring.mvcproject.database.mybatis.dto.response.PetListResponse;
 import com.spring.mvcproject.database.mybatis.dto.response.PetResponse;
 import com.spring.mvcproject.database.mybatis.entity.Pet;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,14 +33,17 @@ public class PetService {
     }
 
     // 개별조회 중간처리
-    public Pet getPet(Long id) {
+    public PetDetailResponse getPet(Long id) {
         Pet pet = petRepository.findById(id);
-        return pet;
+
+        // 클라이언트에게 반환할 DTO로 변환
+        return PetDetailResponse.from(pet);
+
     }
 
     // 생성 중간처리
-    public boolean createPet(Pet pet) {
-        boolean savedPet = petRepository.save(pet);
+    public boolean createPet(PetSaveRequest pet) {
+        boolean savedPet = petRepository.save(pet.toEntity());
         return savedPet;
     }
 
