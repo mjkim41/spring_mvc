@@ -34,7 +34,7 @@ public class PersonRepository {
 
     // Database에 로그인할 정보
     private String username = "root";
-    private String password = "joder9141";
+    private String password = "1234";
     // 데이터베이스가 설치된 주소 (JDBC URL)
     private String url = "jdbc:mariadb://localhost:3306/practice";
 

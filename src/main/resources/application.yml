@@ -37,7 +37,7 @@ spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/practice
     username: root
-    password: joder9141
+    password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
 
 # MyBatis Setting
@@ -60,7 +60,7 @@ Spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/practice
     username: root
-    password: joder9141
+    password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
 
 # MyBatis Setting
