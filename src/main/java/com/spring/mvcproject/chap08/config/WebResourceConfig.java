@@ -3,6 +3,7 @@ package com.spring.mvcproject.chap08.config;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,3 +24,5 @@ public class WebResourceConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:" + fileUploadConfig.getLocation());
     }
 }
+
+

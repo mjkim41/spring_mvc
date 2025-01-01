@@ -2,7 +2,7 @@ package com.spring.mvcproject.database.mybatis.api;
 
 import com.spring.mvcproject.database.mybatis.dto.request.PetSaveRequest;
 import com.spring.mvcproject.database.mybatis.dto.response.PetDetailResponse;
-import com.spring.mvcproject.database.mybatis.repository.PetRepository;
+import com.spring.mvcproject.database.mybatis.PetRepository;
 import com.spring.mvcproject.database.mybatis.dto.response.PetListResponse;
 import com.spring.mvcproject.database.mybatis.dto.response.PetResponse;
 import com.spring.mvcproject.database.mybatis.entity.Pet;

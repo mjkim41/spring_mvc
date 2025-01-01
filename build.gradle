@@ -26,28 +26,30 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	// jsp 관련 : 타임리프랑 같이 쓰기 불편해서 주석 처리함
+
+	// jsp 관련
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:2.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
-    // 타임리프 관련
+
+	// 타임리프 관련
 //	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 	// 입력값 검증
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// 데이터베이스 라이브러리 - 모든 DB 공통
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	// 마리아디비 커넥터 - 사용할 DB 전용
-	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
-	// html, css, js 자동 업데이트
-	compileOnly("org.springframework.boot:spring-boot-devtools")
 
-	// my batias
+	// MyBatis 라이브러리
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+
+	// 마리아디비 커넥터 - 사용할 DB전용
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
+
 }
 
 tasks.named('test') {
